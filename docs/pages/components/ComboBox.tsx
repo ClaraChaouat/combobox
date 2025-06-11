@@ -8,13 +8,11 @@ import LoadingIndicator from './LoadingIndicator';
 import ErrorMessage from './ErrorMessage';
 import SearchInput from './SearchInput';
 
-// Root container
 const Root = styled('div')(() => ({
   position: 'relative',
   fontFamily: 'var(--font-family-base)',
 }));
 
-// Dropdown list
 const Listbox = styled('ul')(({ theme }) => ({
   position: 'absolute',
   zIndex: 1,
@@ -29,7 +27,6 @@ const Listbox = styled('ul')(({ theme }) => ({
   overflowY: 'auto',
 }));
 
-// List item (styled li)
 const Option = styled('li', { shouldForwardProp: (prop: string) => prop !== 'active' })<{
   active: boolean;
 }>(({ theme, active }) => ({
@@ -38,13 +35,11 @@ const Option = styled('li', { shouldForwardProp: (prop: string) => prop !== 'act
   cursor: 'pointer',
 }));
 
-// Props interface for ComboBox
 interface ComboBoxProps {
   onChange?: (item: SuggestionItem) => void;
   fetchSuggestions?: (query: string) => Promise<SuggestionItem[]>;
 }
 
-// ComboBox component
 export default function ComboBox({ onChange, fetchSuggestions }: ComboBoxProps) {
   const [inputValue, setInputValue] = useState('');
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -86,7 +81,7 @@ export default function ComboBox({ onChange, fetchSuggestions }: ComboBoxProps) 
     if (!isOpen) {
       setActiveIndex(-1);
     } else if (activeIndex >= suggestions.length) {
-      setActiveIndex(suggestions.length ? 0 : -1);
+      setActiveIndex(suggestions.length - 1);
     }
   }, [isOpen, suggestions.length, activeIndex]);
 

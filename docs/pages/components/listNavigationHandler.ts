@@ -26,7 +26,6 @@ const getKeyDownHandler = ({
       e.preventDefault();
       if (!popupOpen) {
         setIsOpen(true);
-        setActiveIndex(0);
       } else {
         setActiveIndex(Math.min(activeIndex + 1, suggestions.length - 1));
       }
