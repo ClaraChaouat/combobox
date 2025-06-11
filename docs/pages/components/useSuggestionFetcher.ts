@@ -1,11 +1,11 @@
 import { useEffect, useState, useCallback } from 'react';
-import { AUTOCOMPLETE_CONFIG, VALID_INPUT_REGEX } from './autocompleteConstants';
 import { SuggestionItem } from './suggestionTypes';
 import getSuggestions from './getSuggestions';
 import countries from './countries';
+import { SEARCH_CONFIG, VALID_INPUT_REGEX } from './searcBoxConfig';
 
 const preload = (): SuggestionItem[] =>
-  countries.map((c, i) => ({ id: i, name: c.label })).slice(0, AUTOCOMPLETE_CONFIG.MAX_SUGGESTIONS);
+  countries.map((c, i) => ({ id: i, name: c.label })).slice(0, SEARCH_CONFIG.MAX_SUGGESTIONS);
 
 interface State {
   suggestions: SuggestionItem[];
@@ -30,7 +30,7 @@ const useSuggestionFetcher = (
     const trimmed = query.trim();
     const isValid = VALID_INPUT_REGEX.test(trimmed);
 
-    if (!isValid || trimmed.length < AUTOCOMPLETE_CONFIG.MIN_SEARCH_LENGTH) {
+    if (!isValid || trimmed.length < SEARCH_CONFIG.MIN_SEARCH_LENGTH) {
       setState((s) => ({
         ...s,
         isOpen: false,
@@ -44,7 +44,7 @@ const useSuggestionFetcher = (
     try {
       const results = await fetchFn(trimmed);
       setState({
-        suggestions: results.slice(0, AUTOCOMPLETE_CONFIG.MAX_SUGGESTIONS),
+        suggestions: results.slice(0, SEARCH_CONFIG.MAX_SUGGESTIONS),
         isLoading: false,
         error: null,
         isOpen: true,

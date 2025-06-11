@@ -1,4 +1,4 @@
-export const AUTOCOMPLETE_CONFIG = {
+export const SEARCH_CONFIG = {
   MIN_SEARCH_LENGTH: 1,
   MAX_SUGGESTIONS: 10,
 } as const;
