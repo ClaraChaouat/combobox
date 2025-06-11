@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
-import { SuggestionItem } from './suggestionTypes';
+import { FilterOptionsFn, SuggestionItem } from './suggestionTypes';
 import HighlightedText from './HighlightedText';
 import useSuggestionFetcher from './useSuggestionFetcher';
 import getKeyDownHandler from './listNavigationHandler';
@@ -39,6 +39,7 @@ const Option = styled('li', { shouldForwardProp: (prop: string) => prop !== 'act
 interface ComboBoxProps {
   onChange?: (item: SuggestionItem) => void;
   fetchSuggestions?: (query: string) => Promise<SuggestionItem[]>;
+  filterOptions?: FilterOptionsFn;
 }
 
 function useClampActiveIndex(
@@ -72,7 +73,7 @@ function useScrollActiveIntoView(
   }, [isOpen, activeIndex, suggestions]);
 }
 
-export default function ComboBox({ onChange, fetchSuggestions }: ComboBoxProps) {
+export default function ComboBox({ onChange, fetchSuggestions, filterOptions }: ComboBoxProps) {
   const [inputValue, setInputValue] = useState('');
   const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -81,6 +82,7 @@ export default function ComboBox({ onChange, fetchSuggestions }: ComboBoxProps) 
   const { suggestions, isOpen, error, isLoading, setIsOpen } = useSuggestionFetcher(
     inputValue,
     fetchSuggestions,
+    filterOptions,
   );
 
   const handleSelect = (item: SuggestionItem) => {

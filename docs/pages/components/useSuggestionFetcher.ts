@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { SuggestionItem } from './suggestionTypes';
+import { FilterOptionsFn, SuggestionItem } from './suggestionTypes';
 import getSuggestions from './getSuggestions';
 import countries from './countries';
 import { SEARCH_CONFIG, VALID_INPUT_REGEX } from './searcBoxConfig';
@@ -15,9 +15,20 @@ interface State {
 }
 type ReturnType = State & { setIsOpen: (o: boolean) => void };
 
+const defaultFilter: FilterOptionsFn = (opts, q) => {
+  const norm = (s: string) => s.toLowerCase();
+  const query = q.toLowerCase();
+  const prefix = opts.filter((o) => norm(o.name).startsWith(query));
+  const substr = opts
+    .filter((o) => !norm(o.name).startsWith(query) && norm(o.name).includes(query))
+    .sort((a, b) => norm(a.name).indexOf(q) - norm(b.name).indexOf(q));
+  return [...prefix, ...substr];
+};
+
 const useSuggestionFetcher = (
   query: string,
   fetchFn: (q: string) => Promise<SuggestionItem[]> = getSuggestions,
+  filterOptions: FilterOptionsFn = defaultFilter,
 ): ReturnType => {
   const [state, setState] = useState<State>({
     suggestions: preload(),
@@ -42,9 +53,10 @@ const useSuggestionFetcher = (
     setState((s) => ({ ...s, isLoading: true, error: null }));
 
     try {
-      const results = await fetchFn(trimmed);
+      const raw = await fetchFn(trimmed);
+      const filtered = filterOptions(raw, trimmed);
       setState({
-        suggestions: results.slice(0, SEARCH_CONFIG.MAX_SUGGESTIONS),
+        suggestions: filtered.slice(0, SEARCH_CONFIG.MAX_SUGGESTIONS),
         isLoading: false,
         error: null,
         isOpen: true,
@@ -57,7 +69,7 @@ const useSuggestionFetcher = (
         isOpen: false,
       });
     }
-  }, [query, fetchFn]);
+  }, [query, fetchFn, filterOptions]);
 
   useEffect(() => {
     const id = setTimeout(fetchSuggestions, 300);
