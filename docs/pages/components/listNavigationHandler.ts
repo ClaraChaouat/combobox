@@ -35,7 +35,8 @@ const getKeyDownHandler = ({
     case 'ArrowUp': {
       if (!popupOpen) return;
       e.preventDefault();
-      setActiveIndex(Math.max(activeIndex - 1, 0));
+      const next = activeIndex < 0 ? suggestions.length - 1 : Math.max(activeIndex - 1, 0);
+      setActiveIndex(next);
       break;
     }
 

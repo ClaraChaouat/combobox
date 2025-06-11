@@ -85,6 +85,16 @@ export default function ComboBox({ onChange, fetchSuggestions }: ComboBoxProps) 
     }
   }, [isOpen, suggestions.length, activeIndex]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    if (activeIndex < 0 || activeIndex >= suggestions.length) return;
+
+    const el = document.getElementById(`option-${suggestions[activeIndex].id}`);
+    if (el && typeof el.scrollIntoView === 'function') {
+      el.scrollIntoView({ block: 'nearest' });
+    }
+  }, [isOpen, activeIndex, suggestions]);
+
   return (
     <Root ref={rootRef}>
       {isLoading && <LoadingIndicator />}
