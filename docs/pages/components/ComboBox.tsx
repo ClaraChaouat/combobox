@@ -7,6 +7,7 @@ import getKeyDownHandler from './listNavigationHandler';
 import LoadingIndicator from './LoadingIndicator';
 import ErrorMessage from './ErrorMessage';
 import SearchInput from './SearchInput';
+import useClickOutside from './useClickOutside';
 
 const Root = styled('div')(() => ({
   position: 'relative',
@@ -40,6 +41,37 @@ interface ComboBoxProps {
   fetchSuggestions?: (query: string) => Promise<SuggestionItem[]>;
 }
 
+function useClampActiveIndex(
+  isOpen: boolean,
+  suggestions: SuggestionItem[],
+  activeIndex: number,
+  setActiveIndex: (n: number) => void,
+) {
+  useEffect(() => {
+    if (!isOpen) {
+      setActiveIndex(-1);
+    } else if (activeIndex >= suggestions.length) {
+      setActiveIndex(suggestions.length - 1);
+    }
+  }, [isOpen, suggestions.length, activeIndex, setActiveIndex]);
+}
+
+function useScrollActiveIntoView(
+  isOpen: boolean,
+  activeIndex: number,
+  suggestions: SuggestionItem[],
+) {
+  useEffect(() => {
+    if (!isOpen) return;
+    if (activeIndex < 0 || activeIndex >= suggestions.length) return;
+
+    const el = document.getElementById(`option-${suggestions[activeIndex].id}`);
+    if (el && typeof (el as any).scrollIntoView === 'function') {
+      el.scrollIntoView({ block: 'nearest' });
+    }
+  }, [isOpen, activeIndex, suggestions]);
+}
+
 export default function ComboBox({ onChange, fetchSuggestions }: ComboBoxProps) {
   const [inputValue, setInputValue] = useState('');
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -67,33 +99,9 @@ export default function ComboBox({ onChange, fetchSuggestions }: ComboBoxProps) 
     setInputValue,
   });
 
-  useEffect(() => {
-    const onClickOutside = (e: MouseEvent) => {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', onClickOutside);
-    return () => document.removeEventListener('mousedown', onClickOutside);
-  }, [setIsOpen]);
-
-  useEffect(() => {
-    if (!isOpen) {
-      setActiveIndex(-1);
-    } else if (activeIndex >= suggestions.length) {
-      setActiveIndex(suggestions.length - 1);
-    }
-  }, [isOpen, suggestions.length, activeIndex]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    if (activeIndex < 0 || activeIndex >= suggestions.length) return;
-
-    const el = document.getElementById(`option-${suggestions[activeIndex].id}`);
-    if (el && typeof el.scrollIntoView === 'function') {
-      el.scrollIntoView({ block: 'nearest' });
-    }
-  }, [isOpen, activeIndex, suggestions]);
+  useClickOutside(rootRef, () => setIsOpen(false));
+  useClampActiveIndex(isOpen, suggestions, activeIndex, setActiveIndex);
+  useScrollActiveIntoView(isOpen, activeIndex, suggestions);
 
   return (
     <Root ref={rootRef}>
