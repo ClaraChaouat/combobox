@@ -14,26 +14,34 @@ const Root = styled('div')(() => ({
   fontFamily: 'var(--font-family-base)',
 }));
 
-const Listbox = styled('ul')(({ theme }) => ({
+const Listbox = styled('ul')<{ isOpen?: boolean }>(({ theme }) => ({
   position: 'absolute',
   zIndex: 1,
+  top: '100%',
   width: '100%',
-  margin: 0,
   padding: 0,
   listStyle: 'none',
   backgroundColor: theme.palette.background.paper,
+  marginTop: '-1px',
   border: `1px solid ${theme.palette.divider}`,
-  borderTop: 'none',
+  borderRadius: '0 0 20px 20px',
   maxHeight: 200,
+  borderTop: 'none',
   overflowY: 'auto',
 }));
 
 const Option = styled('li', { shouldForwardProp: (prop: string) => prop !== 'active' })<{
   active: boolean;
 }>(({ theme, active }) => ({
-  padding: theme.spacing(1),
+  display: 'flex',
+  alignItems: 'center',
+  minHeight: 44,
+
+  padding: theme.spacing(0, 2),
   backgroundColor: active ? theme.palette.action.hover : 'transparent',
   cursor: 'pointer',
+  borderTopRightRadius: active ? '20px' : 0,
+  borderBottomRightRadius: active ? '20px' : 0,
 }));
 
 interface ComboBoxProps {
@@ -63,11 +71,11 @@ function useScrollActiveIntoView(
   suggestions: SuggestionItem[],
 ) {
   useEffect(() => {
-    if (!isOpen) return;
-    if (activeIndex < 0 || activeIndex >= suggestions.length) return;
-
+    if (!isOpen || activeIndex < 0 || activeIndex >= suggestions.length) {
+      return;
+    }
     const el = document.getElementById(`option-${suggestions[activeIndex].id}`);
-    if (el && typeof (el as any).scrollIntoView === 'function') {
+    if (el && typeof el.scrollIntoView === 'function') {
       el.scrollIntoView({ block: 'nearest' });
     }
   }, [isOpen, activeIndex, suggestions]);
@@ -108,6 +116,12 @@ export default function ComboBox({ onChange, fetchSuggestions, filterOptions }: 
   useClampActiveIndex(isOpen, suggestions, activeIndex, setActiveIndex);
   useScrollActiveIntoView(isOpen, activeIndex, suggestions);
 
+  useEffect(() => {
+    if (isOpen && suggestions.length > 0 && activeIndex < 0) {
+      setActiveIndex(0);
+    }
+  }, [isOpen, suggestions.length, activeIndex, setActiveIndex]);
+
   return (
     <Root ref={rootRef}>
       {isLoading && <LoadingIndicator />}
@@ -126,10 +140,11 @@ export default function ComboBox({ onChange, fetchSuggestions, filterOptions }: 
         aria-autocomplete="list"
         autoComplete="off"
         autoFocus
+        isOpen={isOpen}
       />
       {error && <ErrorMessage>{error}</ErrorMessage>}
       {isOpen && (
-        <Listbox role="listbox" id="combo-options">
+        <Listbox role="listbox" id="combo-options" isOpen={isOpen}>
           {suggestions.length > 0 ? (
             suggestions.map((s, i) => (
               <Option
