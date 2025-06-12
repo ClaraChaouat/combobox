@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { FilterOptionsFn, SuggestionItem } from './suggestionTypes';
 import getSuggestions from './getSuggestions';
 import countries from './countries';
-import { SEARCH_CONFIG, VALID_INPUT_REGEX } from './searcBoxConfig';
+import { SEARCH_CONFIG, VALID_INPUT_REGEX } from './searchBoxConfig';
 
 const preload = (): SuggestionItem[] =>
   countries.map((c, i) => ({ id: i, name: c.label })).slice(0, SEARCH_CONFIG.MAX_SUGGESTIONS);
