@@ -78,9 +78,11 @@ export default function ComboBox({ onChange, fetchSuggestions, filterOptions }: 
   const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+  const [selectedValue, setSelectedValue] = useState<string | null>(null);
 
   const { suggestions, isOpen, error, isLoading, setIsOpen } = useSuggestionFetcher(
     inputValue,
+    selectedValue,
     fetchSuggestions,
     filterOptions,
   );
@@ -89,6 +91,7 @@ export default function ComboBox({ onChange, fetchSuggestions, filterOptions }: 
     setInputValue(item.name);
     onChange?.(item);
     setIsOpen(false);
+    setSelectedValue(item.name);
   };
 
   const handleKeyDown = getKeyDownHandler({

@@ -27,6 +27,7 @@ const defaultFilter: FilterOptionsFn = (opts, q) => {
 
 const useSuggestionFetcher = (
   query: string,
+  selectedValue: string | null,
   fetchFn: (q: string) => Promise<SuggestionItem[]> = getSuggestions,
   filterOptions: FilterOptionsFn = defaultFilter,
 ): ReturnType => {
@@ -40,6 +41,11 @@ const useSuggestionFetcher = (
   const fetchSuggestions = useCallback(async () => {
     const trimmed = query.trim();
     const isValid = VALID_INPUT_REGEX.test(trimmed);
+
+    if (selectedValue && trimmed.toLowerCase() === selectedValue.toLowerCase()) {
+      setState((s) => ({ ...s, isOpen: false, error: null }));
+      return;
+    }
 
     if (!isValid || trimmed.length < SEARCH_CONFIG.MIN_SEARCH_LENGTH) {
       setState((s) => ({
@@ -69,7 +75,7 @@ const useSuggestionFetcher = (
         isOpen: false,
       });
     }
-  }, [query, fetchFn, filterOptions]);
+  }, [query, selectedValue, fetchFn, filterOptions]);
 
   useEffect(() => {
     const id = setTimeout(fetchSuggestions, 300);
