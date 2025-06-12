@@ -133,7 +133,7 @@ export default function ComboBox({ onChange, fetchSuggestions, filterOptions }: 
                 key={s.id}
                 id={`option-${s.id}`}
                 role="option"
-                aria-selected={i === activeIndex}
+                aria-selected={i === activeIndex ? 'true' : undefined}
                 active={i === activeIndex}
                 onMouseEnter={() => setActiveIndex(i)}
                 onClick={() => handleSelect(s)}
