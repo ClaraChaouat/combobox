@@ -7,6 +7,7 @@ import LoadingIndicator from './LoadingIndicator';
 import ErrorMessage from './ErrorMessage';
 import SearchInput from './SearchInput';
 import useClickOutside from './useClickOutside';
+import useAutoCompleteSelection from './useAutoCompleteSelection';
 
 const Root = styled('div')(() => ({
   position: 'relative',
@@ -136,6 +137,14 @@ export default function ComboBox({
   useClickOutside(rootRef, () => setIsOpen(false));
   useClampActiveIndex(isOpen, suggestions, activeIndex, setActiveIndex);
   useScrollActiveIntoView(isOpen, activeIndex, suggestions);
+
+  useAutoCompleteSelection({
+    isOpen,
+    inputValue,
+    activeIndex,
+    suggestions,
+    inputRef,
+  });
 
   return (
     <Root ref={rootRef}>
