@@ -118,12 +118,6 @@ export default function ComboBox({ onChange, fetchSuggestions, filterOptions }: 
   useClampActiveIndex(isOpen, suggestions, activeIndex, setActiveIndex);
   useScrollActiveIntoView(isOpen, activeIndex, suggestions);
 
-  // useEffect(() => {
-  //   if (isOpen && suggestions.length > 0 && activeIndex < 0) {
-  //     setActiveIndex(0);
-  //   }
-  // }, [isOpen, suggestions.length, activeIndex]);
-
   return (
     <Root ref={rootRef}>
       {isLoading && <LoadingIndicator />}
