@@ -1,4 +1,3 @@
-// listNavigationHandler.ts
 import { KeyboardEvent } from 'react';
 import { SuggestionItem } from './suggestionTypes';
 
