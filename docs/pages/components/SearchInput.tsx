@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from 'docs/src/modules/branding/icons/Search';
 
 interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'isOpen'> {
   onClear?: () => void;
@@ -25,7 +25,7 @@ const StyledInput = styled('input', {
 }>(({ theme, isOpen }) => ({
   width: '100%',
   padding: `${theme.spacing(1.5)} ${theme.spacing(2)}`,
-  paddingLeft: `calc(${theme.spacing(2)} + 24px)`,
+  paddingLeft: `calc(${theme.spacing(2)} + 30px)`,
   fontSize: '1rem',
   backgroundColor: theme.palette.background.paper,
   border: `1px solid ${theme.palette.divider}`,
@@ -54,17 +54,17 @@ const SearchInput = forwardRef<HTMLInputElement, Props>(
     return (
       <Wrapper>
         <IconWrapper>
-          <SearchIcon />
-
-          <StyledInput
-            isOpen={isOpen}
-            ref={ref}
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
-            {...rest}
-          />
+          <SearchIcon fontSize="small" />
         </IconWrapper>
+
+        <StyledInput
+          isOpen={isOpen}
+          ref={ref}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          {...rest}
+        />
       </Wrapper>
     );
   },
