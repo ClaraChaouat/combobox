@@ -44,6 +44,20 @@ const Option = styled('li', { shouldForwardProp: (prop: string) => prop !== 'act
   cursor: 'pointer',
   borderTopRightRadius: active ? '20px' : 0,
   borderBottomRightRadius: active ? '20px' : 0,
+  position: 'relative',
+
+  '&::before': active
+    ? {
+        content: '""',
+        position: 'absolute',
+        left: 0,
+        top: 4,
+        bottom: 4,
+        width: 3,
+        borderRadius: '2px',
+        backgroundColor: theme.palette.primary.main,
+      }
+    : {},
 }));
 
 interface ComboBoxProps {
