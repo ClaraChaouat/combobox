@@ -1,10 +1,12 @@
 import React, { forwardRef } from 'react';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 import SearchIcon from 'docs/src/modules/branding/icons/Search';
+import LoadingIndicator from './LoadingIndicator';
 
 interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'isOpen'> {
   onClear?: () => void;
   isOpen: boolean;
+  isLoading?: boolean;
 }
 const Wrapper = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -49,8 +51,17 @@ const StyledInput = styled('input', {
   },
 }));
 
+const LoaderWrapper = styled('div')(({ theme }) => ({
+  position: 'absolute',
+  right: theme.spacing(2),
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  color: theme.palette.text.disabled,
+}));
+
 const SearchInput = forwardRef<HTMLInputElement, Props>(
-  ({ value, placeholder, onChange, onClear, isOpen, ...rest }, ref) => {
+  ({ value, isLoading, placeholder, onChange, onClear, isOpen, ...rest }, ref) => {
     return (
       <Wrapper>
         <IconWrapper>
@@ -65,6 +76,11 @@ const SearchInput = forwardRef<HTMLInputElement, Props>(
           placeholder={placeholder}
           {...rest}
         />
+        {isLoading && (
+          <LoaderWrapper>
+            <LoadingIndicator />
+          </LoaderWrapper>
+        )}
       </Wrapper>
     );
   },

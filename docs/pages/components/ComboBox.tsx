@@ -3,7 +3,6 @@ import { experimentalStyled as styled } from '@material-ui/core/styles';
 import { FilterOptionsFn, SuggestionItem } from './suggestionTypes';
 import useSuggestionFetcher from './useSuggestionFetcher';
 import getKeyDownHandler from './listNavigationHandler';
-import LoadingIndicator from './LoadingIndicator';
 import ErrorMessage from './ErrorMessage';
 import SearchInput from './SearchInput';
 import useClickOutside from './useClickOutside';
@@ -148,7 +147,6 @@ export default function ComboBox({
 
   return (
     <Root ref={rootRef}>
-      {isLoading && <LoadingIndicator />}
       <SearchInput
         ref={inputRef}
         value={inputValue}
@@ -166,6 +164,7 @@ export default function ComboBox({
         autoFocus
         isOpen={isOpen}
         placeholder={placeholder}
+        isLoading={isLoading}
       />
       {error && <ErrorMessage>{error}</ErrorMessage>}
       {isOpen && (

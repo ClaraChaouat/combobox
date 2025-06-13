@@ -1,7 +1,6 @@
 import { SuggestionItem } from './suggestionTypes';
 import countries from './countries';
 
-/* ---- simple 5-minute in-memory cache ---- */
 interface CacheEntry {
   ts: number;
   data: SuggestionItem[];
