@@ -14,7 +14,9 @@ const Root = styled('div')(() => ({
   fontFamily: 'var(--font-family-base)',
 }));
 
-const Listbox = styled('ul')<{ isOpen?: boolean }>(({ theme }) => ({
+const Listbox = styled('ul', { shouldForwardProp: (prop) => prop !== 'isOpen' })<{
+  isOpen?: boolean;
+}>(({ theme }) => ({
   position: 'absolute',
   zIndex: 1,
   top: '100%',
@@ -25,8 +27,8 @@ const Listbox = styled('ul')<{ isOpen?: boolean }>(({ theme }) => ({
   marginTop: '-1px',
   border: `1px solid ${theme.palette.divider}`,
   borderRadius: '0 0 20px 20px',
-  maxHeight: 200,
   borderTop: 'none',
+  maxHeight: 200,
   overflowY: 'auto',
 }));
 
@@ -116,11 +118,11 @@ export default function ComboBox({ onChange, fetchSuggestions, filterOptions }: 
   useClampActiveIndex(isOpen, suggestions, activeIndex, setActiveIndex);
   useScrollActiveIntoView(isOpen, activeIndex, suggestions);
 
-  useEffect(() => {
-    if (isOpen && suggestions.length > 0 && activeIndex < 0) {
-      setActiveIndex(0);
-    }
-  }, [isOpen, suggestions.length, activeIndex, setActiveIndex]);
+  // useEffect(() => {
+  //   if (isOpen && suggestions.length > 0 && activeIndex < 0) {
+  //     setActiveIndex(0);
+  //   }
+  // }, [isOpen, suggestions.length, activeIndex]);
 
   return (
     <Root ref={rootRef}>
@@ -144,7 +146,7 @@ export default function ComboBox({ onChange, fetchSuggestions, filterOptions }: 
       />
       {error && <ErrorMessage>{error}</ErrorMessage>}
       {isOpen && (
-        <Listbox role="listbox" id="combo-options" isOpen={isOpen}>
+        <Listbox role="listbox" id="combo-options">
           {suggestions.length > 0 ? (
             suggestions.map((s, i) => (
               <Option
