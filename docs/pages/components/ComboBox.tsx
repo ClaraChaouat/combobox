@@ -50,6 +50,7 @@ interface ComboBoxProps {
   onChange?: (item: SuggestionItem) => void;
   fetchSuggestions?: (query: string) => Promise<SuggestionItem[]>;
   filterOptions?: FilterOptionsFn;
+  placeholder?: string;
 }
 
 function useClampActiveIndex(
@@ -83,7 +84,12 @@ function useScrollActiveIntoView(
   }, [isOpen, activeIndex, suggestions]);
 }
 
-export default function ComboBox({ onChange, fetchSuggestions, filterOptions }: ComboBoxProps) {
+export default function ComboBox({
+  onChange,
+  fetchSuggestions,
+  filterOptions,
+  placeholder,
+}: ComboBoxProps) {
   const [inputValue, setInputValue] = useState('');
   const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -137,6 +143,7 @@ export default function ComboBox({ onChange, fetchSuggestions, filterOptions }: 
         autoComplete="off"
         autoFocus
         isOpen={isOpen}
+        placeholder={placeholder}
       />
       {error && <ErrorMessage>{error}</ErrorMessage>}
       {isOpen && (

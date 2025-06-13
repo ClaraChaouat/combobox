@@ -16,8 +16,7 @@ export default function LandingPage() {
         <Typography component="h1" variant="h2" sx={{ mt: 8 }}>
           First phase
         </Typography>
-        <ComboBox />
-        {/* <ComboBox fetchSuggestions={slowFetch} /> */}
+        <ComboBox placeholder="Search for a country" />
       </Container>
     </BrandingRoot>
   );

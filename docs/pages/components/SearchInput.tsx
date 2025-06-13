@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
+import SearchIcon from '@mui/icons-material/Search';
 
 interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'isOpen'> {
   onClear?: () => void;
@@ -11,7 +12,12 @@ const Wrapper = styled('div')(({ theme }) => ({
   alignItems: 'center',
   marginTop: theme.spacing(2),
 }));
-
+const IconWrapper = styled('div')(({ theme }) => ({
+  position: 'absolute',
+  left: theme.spacing(2),
+  pointerEvents: 'none',
+  color: theme.palette.text.disabled,
+}));
 const StyledInput = styled('input', {
   shouldForwardProp: (prop) => prop !== 'isOpen',
 })<{
@@ -19,6 +25,7 @@ const StyledInput = styled('input', {
 }>(({ theme, isOpen }) => ({
   width: '100%',
   padding: `${theme.spacing(1.5)} ${theme.spacing(2)}`,
+  paddingLeft: `calc(${theme.spacing(2)} + 24px)`,
   fontSize: '1rem',
   backgroundColor: theme.palette.background.paper,
   border: `1px solid ${theme.palette.divider}`,
@@ -43,10 +50,21 @@ const StyledInput = styled('input', {
 }));
 
 const SearchInput = forwardRef<HTMLInputElement, Props>(
-  ({ value, onChange, onClear, isOpen, ...rest }, ref) => {
+  ({ value, placeholder, onChange, onClear, isOpen, ...rest }, ref) => {
     return (
       <Wrapper>
-        <StyledInput isOpen={isOpen} ref={ref} value={value} onChange={onChange} {...rest} />
+        <IconWrapper>
+          <SearchIcon />
+
+          <StyledInput
+            isOpen={isOpen}
+            ref={ref}
+            value={value}
+            onChange={onChange}
+            placeholder={placeholder}
+            {...rest}
+          />
+        </IconWrapper>
       </Wrapper>
     );
   },
