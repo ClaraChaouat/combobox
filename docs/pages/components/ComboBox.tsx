@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 import { FilterOptionsFn, SuggestionItem } from './suggestionTypes';
-import HighlightedText from './HighlightedText';
 import useSuggestionFetcher from './useSuggestionFetcher';
 import getKeyDownHandler from './listNavigationHandler';
 import LoadingIndicator from './LoadingIndicator';
@@ -173,7 +172,7 @@ export default function ComboBox({
                 onMouseEnter={() => setActiveIndex(i)}
                 onClick={() => handleSelect(s)}
               >
-                <HighlightedText text={s.name} query={inputValue} />
+                <span>{s.name}</span>
               </Option>
             ))
           ) : (
