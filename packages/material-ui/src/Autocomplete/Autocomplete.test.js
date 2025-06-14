@@ -209,6 +209,22 @@ describe('<Autocomplete />', () => {
       fireEvent.change(textbox, { target: { value: 'a' } });
       checkHighlightIs(getByRole('listbox'), 'Bar');
     });
+    it('should highlight the first option by default when popup opens and autoHighlight is enabled', () => {
+      const { getByRole, getAllByRole } = render(
+        <Autocomplete
+          options={['one', 'two', 'three']}
+          autoHighlight
+          open
+          renderInput={(params) => <TextField {...params} />}
+        />,
+      );
+
+      const listbox = getByRole('listbox');
+      const options = getAllByRole('option');
+
+      expect(listbox).toBeVisible();
+      expect(options[0].getAttribute('data-focus')).to.equal('true');
+    });
   });
 
   describe('highlight synchronisation', () => {
