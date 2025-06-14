@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 import SearchIcon from 'docs/src/modules/branding/icons/Search';
+import ClearIcon from '@material-ui/icons/Close';
 import LoadingIndicator from './LoadingIndicator';
 
 interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'isOpen'> {
@@ -60,6 +61,20 @@ const LoaderWrapper = styled('div')(({ theme }) => ({
   color: theme.palette.text.disabled,
 }));
 
+const ClearButton = styled('button')(({ theme }) => ({
+  position: 'absolute',
+  right: theme.spacing(2),
+  background: 'none',
+  border: 'none',
+  cursor: 'pointer',
+  padding: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: theme.palette.action.active,
+  '&:hover': { color: theme.palette.text.primary },
+}));
+
 const SearchInput = forwardRef<HTMLInputElement, Props>(
   ({ value, isLoading, placeholder, onChange, onClear, isOpen, ...rest }, ref) => {
     return (
@@ -76,6 +91,13 @@ const SearchInput = forwardRef<HTMLInputElement, Props>(
           placeholder={placeholder}
           {...rest}
         />
+
+        {value && onClear && !isLoading && (
+          <ClearButton type="button" aria-label="Clear" onClick={onClear}>
+            <ClearIcon fontSize="small" />
+          </ClearButton>
+        )}
+
         {isLoading && (
           <LoaderWrapper>
             <LoadingIndicator />
