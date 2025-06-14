@@ -58,6 +58,24 @@ function findIndex(array, comp) {
 
 const defaultFilterOptions = createFilterOptions();
 
+function useEnsureHighlight({
+  popupOpen,
+  filteredOptions,
+  highlightedIndexRef,
+  setHighlightedIndex,
+  inputValue,
+}) {
+  React.useEffect(() => {
+    if (
+      popupOpen &&
+      filteredOptions.length > 0 &&
+      (highlightedIndexRef.current == null || highlightedIndexRef.current >= filteredOptions.length)
+    ) {
+      setHighlightedIndex({ index: 0, reason: 'auto', event: null });
+    }
+  }, [popupOpen, filteredOptions.length, inputValue, setHighlightedIndex, highlightedIndexRef]);
+}
+
 // Number of options to jump in list box when pageup and pagedown keys are used.
 const pageSize = 5;
 
@@ -941,6 +959,19 @@ export default function useAutocomplete(props) {
       return acc;
     }, []);
   }
+  /**
+   * Ensure the highlighted index is reset when the filtered options change.
+   * Without this, if the previously highlighted index no longer exists after filtering,
+   * the component may keep an invalid highlight or skip firing `onHighlightChange`.
+   * This effect ensures the first option is automatically highlighted when appropriate.
+   */
+  useEnsureHighlight({
+    popupOpen,
+    filteredOptions,
+    highlightedIndexRef,
+    setHighlightedIndex,
+    inputValue,
+  });
 
   return {
     getRootProps: (other = {}) => ({
